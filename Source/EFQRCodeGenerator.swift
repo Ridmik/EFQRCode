@@ -616,7 +616,11 @@ public class EFQRCodeGenerator: NSObject {
                         (indexX <= 8 && indexY >= (codeSize - 9)) ||
                         (indexX >= (codeSize - 9) && indexY <= 8)
                     if isStaticPoint && isFinder {
-                        context.setFillColor(UIColor.red.cgColor)
+                        if isFirstOuterPoint(x: indexX, y: indexY) {
+                            context.setFillColor(UIColor.cyan.cgColor)
+                        } else {
+                            context.setFillColor(UIColor.red.cgColor)
+                        }
                         context.fill(CGRect(
                             x: CGFloat(indexXCTM) * scaleX + pointOffset,
                             y: CGFloat(indexYCTM) * scaleY + pointOffset,
@@ -962,6 +966,24 @@ public class EFQRCodeGenerator: NSObject {
                 && y >= Int(point.y - 2)
                 && y <= Int(point.y + 2)
         }
+    }
+    
+    private func isFirstOuterPoint(x: Int, y: Int) -> Bool {
+        var outerPoints = [CGPoint]()
+        for x in 1...7 {
+            outerPoints.append(CGPoint(x: x, y: 1))
+        }
+        for y in 1...7 {
+            outerPoints.append(CGPoint(x: 7, y: y))
+        }
+        for x in 1...7 {
+            outerPoints.append(CGPoint(x: x, y: 7))
+        }
+        for y in 1...7 {
+            outerPoints.append(CGPoint(x: 1, y: y))
+        }
+        
+        return outerPoints.contains(CGPoint(x: x, y: y))
     }
 
     /// [Alignment Pattern Locations](

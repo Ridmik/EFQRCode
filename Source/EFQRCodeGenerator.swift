@@ -31,6 +31,7 @@ import QRCodeSwift
 #endif
 import CoreGraphics
 import Foundation
+import UIKit
 
 /// Class for generating QR code images.
 @objcMembers
@@ -610,17 +611,31 @@ public class EFQRCodeGenerator: NSObject {
                     let indexYCTM = codeSize - indexX - 1
                     
                     let isStaticPoint = isStatic(x: indexX, y: indexY, size: codeSize, APLPoints: points)
-
-                    drawPoint(
-                        context: context,
-                        rect: CGRect(
+                    
+                    let isFinder = (indexX <= 8 && indexY <= 8) ||
+                        (indexX <= 8 && indexY >= (codeSize - 9)) ||
+                        (indexX >= (codeSize - 9) && indexY <= 8)
+                    if isStaticPoint && isFinder {
+                        context.setFillColor(UIColor.red.cgColor)
+                        context.fill(CGRect(
                             x: CGFloat(indexXCTM) * scaleX + pointOffset,
                             y: CGFloat(indexYCTM) * scaleY + pointOffset,
                             width: scaleX - 2 * pointOffset,
                             height: scaleY - 2 * pointOffset
-                        ),
-                        isStatic: isStaticPoint
-                    )
+                        ))
+                    } else {
+                        context.setFillColor(colorCGFront)
+                        drawPoint(
+                            context: context,
+                            rect: CGRect(
+                                x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                width: scaleX - 2 * pointOffset,
+                                height: scaleY - 2 * pointOffset
+                            ),
+                            isStatic: isStaticPoint
+                        )
+                    }
                 }
             }
             result = context.makeImage()

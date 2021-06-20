@@ -616,8 +616,10 @@ public class EFQRCodeGenerator: NSObject {
                         (indexX <= 8 && indexY >= (codeSize - 9)) ||
                         (indexX >= (codeSize - 9) && indexY <= 8)
                     if isStaticPoint && isFinder {
-                        if isFirstOuterPoint(x: indexX, y: indexY) {
+                        if isLeftOuterPoint(x: indexX, y: indexY) {
                             context.setFillColor(UIColor.cyan.cgColor)
+                        } else if isTopRightOuterPoint(x: indexX, y: indexY, size: codeSize) {
+                            context.setFillColor(UIColor.blue.cgColor)
                         } else {
                             context.setFillColor(UIColor.red.cgColor)
                         }
@@ -968,7 +970,7 @@ public class EFQRCodeGenerator: NSObject {
         }
     }
     
-    private func isFirstOuterPoint(x: Int, y: Int) -> Bool {
+    private func isLeftOuterPoint(x: Int, y: Int) -> Bool {
         var outerPoints = [CGPoint]()
         for x in 1...7 {
             outerPoints.append(CGPoint(x: x, y: 1))
@@ -981,6 +983,22 @@ public class EFQRCodeGenerator: NSObject {
         }
         for y in 1...7 {
             outerPoints.append(CGPoint(x: 1, y: y))
+        }
+        
+        return outerPoints.contains(CGPoint(x: x, y: y))
+    }
+    
+    private func isTopRightOuterPoint(x: Int, y: Int, size: Int) -> Bool {
+        var outerPoints = [CGPoint]()
+
+        for y in (size - 9)...size {
+            outerPoints.append(CGPoint(x: 1, y: y))
+            outerPoints.append(CGPoint(x: 7, y: y))
+        }
+        
+        for x in 1...7 {
+            outerPoints.append(CGPoint(x: x, y: (size - 8)))
+            outerPoints.append(CGPoint(x: x, y: (size - 2)))
         }
         
         return outerPoints.contains(CGPoint(x: x, y: y))

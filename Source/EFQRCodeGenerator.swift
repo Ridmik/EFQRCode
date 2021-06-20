@@ -620,6 +620,8 @@ public class EFQRCodeGenerator: NSObject {
                             context.setFillColor(UIColor.cyan.cgColor)
                         } else if isTopRightOuterPoint(x: indexX, y: indexY, size: codeSize) {
                             context.setFillColor(UIColor.blue.cgColor)
+                        } else if isBottomLeftOuterPoint(x: indexX, y: indexY, size: codeSize) {
+                            context.setFillColor(UIColor.green.cgColor)
                         } else {
                             context.setFillColor(UIColor.red.cgColor)
                         }
@@ -974,15 +976,12 @@ public class EFQRCodeGenerator: NSObject {
         var outerPoints = [CGPoint]()
         for x in 1...7 {
             outerPoints.append(CGPoint(x: x, y: 1))
-        }
-        for y in 1...7 {
-            outerPoints.append(CGPoint(x: 7, y: y))
-        }
-        for x in 1...7 {
             outerPoints.append(CGPoint(x: x, y: 7))
         }
+        
         for y in 1...7 {
             outerPoints.append(CGPoint(x: 1, y: y))
+            outerPoints.append(CGPoint(x: 7, y: y))
         }
         
         return outerPoints.contains(CGPoint(x: x, y: y))
@@ -999,6 +998,22 @@ public class EFQRCodeGenerator: NSObject {
         for x in 1...7 {
             outerPoints.append(CGPoint(x: x, y: (size - 8)))
             outerPoints.append(CGPoint(x: x, y: (size - 2)))
+        }
+        
+        return outerPoints.contains(CGPoint(x: x, y: y))
+    }
+    
+    private func isBottomLeftOuterPoint(x: Int, y: Int, size: Int) -> Bool {
+        var outerPoints = [CGPoint]()
+        
+        for y in 1...7 {
+            outerPoints.append(CGPoint(x: (size - 8), y: y))
+            outerPoints.append(CGPoint(x: (size - 2), y: y))
+        }
+        
+        for x in (size - 8)...size {
+            outerPoints.append(CGPoint(x: x, y: 1))
+            outerPoints.append(CGPoint(x: x, y: 7))
         }
         
         return outerPoints.contains(CGPoint(x: x, y: y))

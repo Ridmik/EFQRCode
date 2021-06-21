@@ -22,7 +22,7 @@ public struct EFQRCustomization {
     let position: EFQRCodePosition
     let shape: EFPointShape = .square
     
-    init(color: UIColor, position: EFQRCodePosition) {
+    public init(color: UIColor, position: EFQRCodePosition) {
         self.color = color
         self.position = position
     }

@@ -350,6 +350,18 @@ public class EFQRCodeGenerator: NSObject {
     public func withStyledTimingPoint(_ ignoreTiming: Bool = true) -> EFQRCodeGenerator {
         return withStaticTimingPoint(!ignoreTiming)
     }
+    
+    public var customizations: [EFQRCustomization] = [EFQRCustomization]() {
+        didSet {
+            imageQRCode = nil
+        }
+    }
+    
+    @discardableResult
+    public func withCustomizations(_ customizations: [EFQRCustomization]) -> EFQRCodeGenerator {
+        return with(\.customizations, customizations)
+    }
+    
 
     // MARK: - Cache
 

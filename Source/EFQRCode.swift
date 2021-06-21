@@ -81,7 +81,8 @@ public enum EFQRCode {
         pointShape: EFPointShape = .square,
         pointOffset: CGFloat = 0,
         isTimingPointStyled: Bool = false,
-        mode: EFQRCodeMode? = nil
+        mode: EFQRCodeMode? = nil,
+        customizations: [EFQRCustomization] = []
     ) -> CGImage? {
         return EFQRCodeGenerator(content: content, encoding: encoding, size: size)
             .withWatermark(watermark, mode: watermarkMode)
@@ -94,6 +95,7 @@ public enum EFQRCode {
             .withMagnification(magnification)
             .withPointOffset(pointOffset)
             .withStyledTimingPoint(isTimingPointStyled)
+            .withCustomizations(customizations)
             .generate()
     }
 

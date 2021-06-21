@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum EFQRCodePosition {
+public enum EFQRCodePosition {
     case topLeftOuter
     case topLeftInner
     case topRightOuter
@@ -17,8 +17,13 @@ enum EFQRCodePosition {
     case bottomLeftInner
 }
 
-struct EFQRCustomization {
+public struct EFQRCustomization {
     let color: UIColor
     let position: EFQRCodePosition
     let shape: EFPointShape = .square
+    
+    init(color: UIColor, position: EFQRCodePosition) {
+        self.color = color
+        self.position = position
+    }
 }

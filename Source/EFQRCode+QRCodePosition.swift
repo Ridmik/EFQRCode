@@ -15,6 +15,7 @@ public enum EFQRCodePosition {
     case topRightInner
     case bottomLeftOuter
     case bottomLeftInner
+    case unknown
 }
 
 public struct EFQRCustomization {

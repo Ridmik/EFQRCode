@@ -361,7 +361,6 @@ public class EFQRCodeGenerator: NSObject {
     public func withCustomizations(_ customizations: [EFQRCustomization]) -> EFQRCodeGenerator {
         return with(\.customizations, customizations)
     }
-    
 
     // MARK: - Cache
 
@@ -627,22 +626,37 @@ public class EFQRCodeGenerator: NSObject {
                     let isFinder = (indexX <= 8 && indexY <= 8) ||
                         (indexX <= 8 && indexY >= (codeSize - 9)) ||
                         (indexX >= (codeSize - 9) && indexY <= 8)
-                    if isStaticPoint && isFinder {
-                        if isLeftOuterPoint(x: indexX, y: indexY) {
-                            context.setFillColor(UIColor.cyan.cgColor)
-                        } else if isTopRightOuterPoint(x: indexX, y: indexY, size: codeSize) {
-                            context.setFillColor(UIColor.blue.cgColor)
-                        } else if isBottomLeftOuterPoint(x: indexX, y: indexY, size: codeSize) {
-                            context.setFillColor(UIColor.green.cgColor)
+                    if isStaticPoint {
+                        if isFinder {
+                            if !customizations.isEmpty {
+                                for case let custom in customizations {
+                                    if position(x: indexX, y: indexY, codeSize: codeSize) == custom.position {
+                                        context.setFillColor(custom.color.cgColor)
+                                        break
+                                    }
+                                }
+                                context.fill(CGRect(
+                                    x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                    y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                    width: scaleX - 2 * pointOffset,
+                                    height: scaleY - 2 * pointOffset
+                                ))
+                            } else {
+                                context.fill(CGRect(
+                                    x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                    y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                    width: scaleX - 2 * pointOffset,
+                                    height: scaleY - 2 * pointOffset
+                                ))
+                            }
                         } else {
-                            context.setFillColor(UIColor.red.cgColor)
+                            context.fill(CGRect(
+                                x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                width: scaleX - 2 * pointOffset,
+                                height: scaleY - 2 * pointOffset
+                            ))
                         }
-                        context.fill(CGRect(
-                            x: CGFloat(indexXCTM) * scaleX + pointOffset,
-                            y: CGFloat(indexYCTM) * scaleY + pointOffset,
-                            width: scaleX - 2 * pointOffset,
-                            height: scaleY - 2 * pointOffset
-                        ))
                     } else {
                         context.setFillColor(colorCGFront)
                         drawPoint(
@@ -1029,6 +1043,32 @@ public class EFQRCodeGenerator: NSObject {
         }
         
         return outerPoints.contains(CGPoint(x: x, y: y))
+    }
+    
+    private func isTopLeftOuterFinder(x: Int, y: Int) -> Bool {
+        return  (x <= 8 && y <= 8)
+    }
+    
+    private func isTopRightOuterFinder(x: Int, y: Int, codeSize: Int) -> Bool {
+        return (x <= 8 && y >= (codeSize - 9))
+    }
+    
+    private func isBottomLeftFinder(x: Int, y: Int, codeSize: Int) -> Bool {
+        return (x >= (codeSize - 9) && y <= 8)
+    }
+    
+    private func position(x: Int, y: Int, codeSize: Int) -> EFQRCodePosition {
+        if isTopLeftOuterFinder(x: x, y: y) {
+            return isLeftOuterPoint(x: x, y: y) ? .topLeftOuter : .topLeftInner
+        }
+        if isTopRightOuterFinder(x: x, y: y, codeSize: codeSize) {
+            return isTopRightOuterPoint(x: x, y: y, size: codeSize) ? .topRightOuter : .topRightInner
+        }
+        
+        if isBottomLeftFinder(x: x, y: y, codeSize: codeSize) {
+            return isBottomLeftOuterPoint(x: x, y: y, size: codeSize) ? .bottomLeftOuter : .bottomLeftInner
+        }
+        return .unknown
     }
 
     /// [Alignment Pattern Locations](

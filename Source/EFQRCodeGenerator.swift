@@ -641,6 +641,16 @@ public class EFQRCodeGenerator: NSObject {
                                     width: scaleX - 2 * pointOffset,
                                     height: scaleY - 2 * pointOffset
                                 ))
+                                drawPoint(
+                                    context: context,
+                                    rect: CGRect(
+                                        x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                        y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                        width: scaleX - 2 * pointOffset,
+                                        height: scaleY - 2 * pointOffset
+                                    ),
+                                    isStatic: isStaticPoint
+                                )
                             } else {
                                 context.fill(CGRect(
                                     x: CGFloat(indexXCTM) * scaleX + pointOffset,
@@ -648,14 +658,28 @@ public class EFQRCodeGenerator: NSObject {
                                     width: scaleX - 2 * pointOffset,
                                     height: scaleY - 2 * pointOffset
                                 ))
+                                drawPoint(
+                                    context: context,
+                                    rect: CGRect(
+                                        x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                        y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                        width: scaleX - 2 * pointOffset,
+                                        height: scaleY - 2 * pointOffset
+                                    ),
+                                    isStatic: isStaticPoint
+                                )
                             }
                         } else {
-                            context.fill(CGRect(
-                                x: CGFloat(indexXCTM) * scaleX + pointOffset,
-                                y: CGFloat(indexYCTM) * scaleY + pointOffset,
-                                width: scaleX - 2 * pointOffset,
-                                height: scaleY - 2 * pointOffset
-                            ))
+                            drawPoint(
+                                context: context,
+                                rect: CGRect(
+                                    x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                    y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                    width: scaleX - 2 * pointOffset,
+                                    height: scaleY - 2 * pointOffset
+                                ),
+                                isStatic: isStaticPoint
+                            )
                         }
                     } else {
                         context.setFillColor(colorCGFront)

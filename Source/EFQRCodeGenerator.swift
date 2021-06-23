@@ -632,25 +632,21 @@ public class EFQRCodeGenerator: NSObject {
                                 for case let custom in customizations {
                                     if position(x: indexX, y: indexY, codeSize: codeSize) == custom.position {
                                         context.setFillColor(custom.color.cgColor)
-                                        break
+                                        if custom.position == .topLeftOuter {
+                                            drawOuterPoint(in: context,
+                                                           point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset),
+                                                           width: scaleX - 2 * pointOffset, height: scaleY - 2 * pointOffset)
+                                        } else {
+                                            context.fill(CGRect(
+                                                x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                                y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                                width: scaleX - 2 * pointOffset,
+                                                height: scaleY - 2 * pointOffset
+                                            ))
+                                        }
                                     }
                                 }
-                                context.fill(CGRect(
-                                    x: CGFloat(indexXCTM) * scaleX + pointOffset,
-                                    y: CGFloat(indexYCTM) * scaleY + pointOffset,
-                                    width: scaleX - 2 * pointOffset,
-                                    height: scaleY - 2 * pointOffset
-                                ))
-                                drawPoint(
-                                    context: context,
-                                    rect: CGRect(
-                                        x: CGFloat(indexXCTM) * scaleX + pointOffset,
-                                        y: CGFloat(indexYCTM) * scaleY + pointOffset,
-                                        width: scaleX - 2 * pointOffset,
-                                        height: scaleY - 2 * pointOffset
-                                    ),
-                                    isStatic: isStaticPoint
-                                )
+                                
                             } else {
                                 context.fill(CGRect(
                                     x: CGFloat(indexXCTM) * scaleX + pointOffset,
@@ -1094,6 +1090,85 @@ public class EFQRCodeGenerator: NSObject {
         }
         return .unknown
     }
+    
+    private func drawOuterPoint(in context: CGContext, point: CGPoint, width: CGFloat, height: CGFloat) {
+        
+        if point.x == 19.0 || point.x == 133.0 {
+            if point.y == 779  {
+                var width = width
+                if point.x == 133 {
+                    width = width * 0.7
+                }
+                drawPoint(
+                    context: context,
+                    rect: CGRect(
+                        x: point.x,
+                        y: point.y,
+                        width: width,
+                        height: height * 0.7
+                    ),
+                    pointShape: .square
+                )
+            } else if point.y == 665 {
+                print(point.x)
+                var w = width
+                var h = height
+                if point.x == 133 {
+                    w = w * 0.7
+                }
+                
+                drawPoint(
+                    context: context,
+                    rect: CGRect(
+                        x: point.x,
+                        y: point.y,
+                        width: w,
+                        height: h
+                    ),
+                    pointShape: .square
+                )
+            } else {
+                drawPoint(
+                    context: context,
+                    rect: CGRect(
+                        x: point.x,
+                        y: point.y,
+                        width: width * 0.7,
+                        height: height
+                    ),
+                    pointShape: .square
+                )
+            }
+            return
+        }
+        drawPoint(
+            context: context,
+            rect: CGRect(
+                x: point.x,
+                y: point.y,
+                width: width,
+                height: height * 0.7
+            ),
+            pointShape: .square
+        )
+        
+    }
+    
+    private func drawPoint(context: CGContext, rect: CGRect, isStatic: Bool = false, pointShape: EFPointShape) {
+        switch pointShape {
+        case .circle:
+            context.fillEllipse(in: rect)
+        case .diamond:
+            if isStatic {
+                context.fill(rect)
+            } else {
+                fillDiamond(context: context, rect: rect)
+            }
+        case .square:
+            context.fill(rect)
+        }
+    }
+    
 
     /// [Alignment Pattern Locations](
     /// http://stackoverflow.com/questions/13238704/calculating-the-position-of-qr-code-alignment-patterns

@@ -633,7 +633,9 @@ public class EFQRCodeGenerator: NSObject {
                                     if position(x: indexX, y: indexY, codeSize: codeSize) == custom.position {
                                         context.setFillColor(custom.color.cgColor)
                                         if custom.position == .topLeftOuter {
-                                            drawOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
+                                            drawTopLeftOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
+                                        } else if custom.position == .bottomLeftOuter {
+                                            drawBottomLeftOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
                                         } else {
                                             context.fill(CGRect(
                                                 x: CGFloat(indexXCTM) * scaleX + pointOffset,
@@ -1089,7 +1091,7 @@ public class EFQRCodeGenerator: NSObject {
         return .unknown
     }
     
-    private func drawOuterPoint(in context: CGContext, point: CGPoint,
+    private func drawTopLeftOuterPoint(in context: CGContext, point: CGPoint,
                                 scaleX: CGFloat, scaleY: CGFloat, pointOffset: CGFloat) {
         
         if point.x == 19.0 {
@@ -1121,6 +1123,50 @@ public class EFQRCodeGenerator: NSObject {
         }
         
         if point.y == 779 {
+            var width = scaleX - 2 * pointOffset
+            if point.x == 114 || point.x == 19 {
+                width += scaleX - 2 * pointOffset
+            }
+            let y = point.y + scaleY / 2
+            let height = scaleY / 2 - 2 * pointOffset
+            let rect = CGRect(x: point.x, y: y, width: width, height: height)
+            
+            context.fill(rect)
+        }
+    }
+    
+    private func drawBottomLeftOuterPoint(in context: CGContext, point: CGPoint,
+                                          scaleX: CGFloat, scaleY: CGFloat, pointOffset: CGFloat) {
+        
+        if point.x == 19.0 {
+            let width: CGFloat = scaleX/2 - 2 * pointOffset
+            let height: CGFloat = scaleY - 2 * pointOffset
+            let rect = CGRect(origin: point, size: CGSize(width: width,
+                                                               height: height))
+            context.fill(rect)
+        }
+        
+        if point.x == 133.0 {
+            let width: CGFloat = scaleX/2 - 2 * pointOffset
+
+            let x = point.x + scaleX / 2
+            var rect = CGRect(x: x, y: point.y, width: width, height: scaleY - 2 * pointOffset)
+            rect = rotateRect(rect)
+            context.fill(rect)
+        }
+        
+        if point.y == 19 {
+            var width = scaleX - 2 * pointOffset
+            if point.x == 114 {
+                width += scaleX - 2 * pointOffset
+            }
+            let height = scaleY / 2 - 2 * pointOffset
+            let rect = CGRect(origin: point, size: CGSize(width: width,
+                                                               height: height))
+            context.fill(rect)
+        }
+        
+        if point.y == 133 {
             var width = scaleX - 2 * pointOffset
             if point.x == 114 || point.x == 19 {
                 width += scaleX - 2 * pointOffset

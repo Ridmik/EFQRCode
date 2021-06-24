@@ -633,9 +633,7 @@ public class EFQRCodeGenerator: NSObject {
                                     if position(x: indexX, y: indexY, codeSize: codeSize) == custom.position {
                                         context.setFillColor(custom.color.cgColor)
                                         if custom.position == .topLeftOuter {
-                                            drawOuterPoint(in: context,
-                                                           point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset),
-                                                           width: scaleX - 2 * pointOffset, height: scaleY - 2 * pointOffset)
+                                            drawOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
                                         } else {
                                             context.fill(CGRect(
                                                 x: CGFloat(indexXCTM) * scaleX + pointOffset,
@@ -1091,67 +1089,57 @@ public class EFQRCodeGenerator: NSObject {
         return .unknown
     }
     
-    private func drawOuterPoint(in context: CGContext, point: CGPoint, width: CGFloat, height: CGFloat) {
+    private func drawOuterPoint(in context: CGContext, point: CGPoint,
+                                scaleX: CGFloat, scaleY: CGFloat, pointOffset: CGFloat) {
         
-        if point.x == 19.0 || point.x == 133.0 {
-            if point.y == 779  {
-                var width = width
-                if point.x == 133 {
-                    width = width * 0.7
-                }
-                drawPoint(
-                    context: context,
-                    rect: CGRect(
-                        x: point.x,
-                        y: point.y,
-                        width: width,
-                        height: height * 0.7
-                    ),
-                    pointShape: .square
-                )
-            } else if point.y == 665 {
-                print(point.x)
-                var w = width
-                var h = height
-                if point.x == 133 {
-                    w = w * 0.7
-                }
-                
-                drawPoint(
-                    context: context,
-                    rect: CGRect(
-                        x: point.x,
-                        y: point.y,
-                        width: w,
-                        height: h
-                    ),
-                    pointShape: .square
-                )
-            } else {
-                drawPoint(
-                    context: context,
-                    rect: CGRect(
-                        x: point.x,
-                        y: point.y,
-                        width: width * 0.7,
-                        height: height
-                    ),
-                    pointShape: .square
-                )
-            }
-            return
+        if point.x == 19.0 {
+            let width: CGFloat = scaleX/2 - 2 * pointOffset
+            let height: CGFloat = scaleY - 2 * pointOffset
+            let rect = CGRect(origin: point, size: CGSize(width: width,
+                                                               height: height))
+            context.fill(rect)
         }
-        drawPoint(
-            context: context,
-            rect: CGRect(
-                x: point.x,
-                y: point.y,
-                width: width,
-                height: height * 0.7
-            ),
-            pointShape: .square
-        )
         
+        if point.x == 133.0 {
+            let width: CGFloat = scaleX/2 - 2 * pointOffset
+
+            let x = point.x + scaleX / 2
+            var rect = CGRect(x: x, y: point.y, width: width, height: scaleY - 2 * pointOffset)
+            rect = rotateRect(rect)
+            context.fill(rect)
+        }
+        
+        if point.y == 665 {
+            var width = scaleX - 2 * pointOffset
+            if point.x == 114 {
+                width += scaleX - 2 * pointOffset
+            }
+            let height = scaleY / 2 - 2 * pointOffset
+            let rect = CGRect(origin: point, size: CGSize(width: width,
+                                                               height: height))
+            context.fill(rect)
+        }
+        
+        if point.y == 779 {
+            var width = scaleX - 2 * pointOffset
+            if point.x == 114 || point.x == 19 {
+                width += scaleX - 2 * pointOffset
+            }
+            let y = point.y + scaleY / 2
+            let height = scaleY / 2 - 2 * pointOffset
+            let rect = CGRect(x: point.x, y: y, width: width, height: height)
+            
+            context.fill(rect)
+        }
+    }
+    
+    func rotateRect(_ rect: CGRect) -> CGRect {
+        let x = rect.midX
+        let y = rect.midY
+        let transform = CGAffineTransform(translationX: x, y: y)
+                                        .rotated(by: .pi)
+                                        .translatedBy(x: -x, y: -y)
+        return rect.applying(transform)
     }
     
     private func drawPoint(context: CGContext, rect: CGRect, isStatic: Bool = false, pointShape: EFPointShape) {

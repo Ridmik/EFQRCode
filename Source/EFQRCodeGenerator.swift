@@ -697,7 +697,8 @@ public class EFQRCodeGenerator: NSObject {
                     }
                 }
             }
-            if !topLeftOuterPoint.isEmpty {
+            if !topLeftOuterPoint.isEmpty,
+               let color = customizations.first(where: {$0.position == .topLeftOuter})?.color {
                 print(topLeftOuterPoint)
                 let xArray = topLeftOuterPoint.map(\.x)
                 let yArray = topLeftOuterPoint.map(\.y)
@@ -705,13 +706,8 @@ public class EFQRCodeGenerator: NSObject {
                       let maxX = xArray.max(),
                       let minY = yArray.min(),
                       let maxY = yArray.max() else { return context.makeImage() }
-                print(minX)
-                print(minY)
-                print(maxX)
-                print(maxY)
                 var refinedPoints = [CGPoint]()
                 for case let point in topLeftOuterPoint {
-                    print(point)
                     if point.x == minX {
                         refinedPoints.append(point)
                     }
@@ -731,20 +727,19 @@ public class EFQRCodeGenerator: NSObject {
                     let path = CGMutablePath()
                     path.move(to: first)
                     var i = 1
-                    print(first)
                     while i < refinedPoints.count {
                         print(refinedPoints[i])
                         path.addLine(to: refinedPoints[i])
                         i += 1
                     }
-                    UIColor.black.set()
+                    color.set()
                     let rect = path.boundingBox
                     context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
                     context.stroke(rect)
                 }
             }
-            if !bottomLeftOuterPoint.isEmpty {
-                print(bottomLeftOuterPoint)
+            if !bottomLeftOuterPoint.isEmpty,
+               let color = customizations.first(where: {$0.position == .bottomLeftOuter})?.color {
                 let xArray = bottomLeftOuterPoint.map(\.x)
                 let yArray = bottomLeftOuterPoint.map(\.y)
                 guard let minX = xArray.min(),
@@ -753,7 +748,6 @@ public class EFQRCodeGenerator: NSObject {
                       let maxY = yArray.max() else { return context.makeImage() }
                 var refinedPoints = [CGPoint]()
                 for case let point in bottomLeftOuterPoint {
-                    print(point)
                     if point.x == minX {
                         refinedPoints.append(point)
                     }
@@ -773,20 +767,19 @@ public class EFQRCodeGenerator: NSObject {
                     let path = CGMutablePath()
                     path.move(to: first)
                     var i = 1
-                    print("Refined first point: \(first)")
                     while i < refinedPoints.count {
                         print(refinedPoints[i])
                         path.addLine(to: refinedPoints[i])
                         i += 1
                     }
-                    UIColor.black.set()
+                    color.set()
                     let rect = path.boundingBox
                     context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
                     context.stroke(rect)
                 }
             }
-            if !topRightOuterPoint.isEmpty {
-                print(topRightOuterPoint)
+            if !topRightOuterPoint.isEmpty,
+               let color = customizations.first(where: {$0.position == .topRightOuter})?.color {
                 let xArray = topRightOuterPoint.map(\.x)
                 let yArray = topRightOuterPoint.map(\.y)
                 guard let minX = xArray.min(),
@@ -815,13 +808,12 @@ public class EFQRCodeGenerator: NSObject {
                     let path = CGMutablePath()
                     path.move(to: first)
                     var i = 1
-                    print("Refined first point: \(first)")
                     while i < refinedPoints.count {
                         print(refinedPoints[i])
                         path.addLine(to: refinedPoints[i])
                         i += 1
                     }
-                    UIColor.black.set()
+                    color.set()
                     let rect = path.boundingBox
                     context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
                     context.stroke(rect)

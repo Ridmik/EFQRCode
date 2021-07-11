@@ -637,11 +637,10 @@ public class EFQRCodeGenerator: NSObject {
                                         context.setFillColor(custom.color.cgColor)
                                         if custom.position == .topLeftOuter {
                                             topLeftOuterPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
-//                                            drawTopLeftOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
                                         } else if custom.position == .bottomLeftOuter {
-                                            drawBottomLeftOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
+                                            bottomLeftOuterPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
                                         } else if custom.position == .topRightOuter {
-                                            drawTopRightOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
+                                            topRightOuterPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
                                         } else {
                                             context.fill(CGRect(
                                                 x: CGFloat(indexXCTM) * scaleX + pointOffset,
@@ -733,6 +732,90 @@ public class EFQRCodeGenerator: NSObject {
                     path.move(to: first)
                     var i = 1
                     print(first)
+                    while i < refinedPoints.count {
+                        print(refinedPoints[i])
+                        path.addLine(to: refinedPoints[i])
+                        i += 1
+                    }
+                    UIColor.black.set()
+                    let rect = path.boundingBox
+                    context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
+                    context.stroke(rect)
+                }
+            }
+            if !bottomLeftOuterPoint.isEmpty {
+                print(bottomLeftOuterPoint)
+                let xArray = bottomLeftOuterPoint.map(\.x)
+                let yArray = bottomLeftOuterPoint.map(\.y)
+                guard let minX = xArray.min(),
+                      let maxX = xArray.max(),
+                      let minY = yArray.min(),
+                      let maxY = yArray.max() else { return context.makeImage() }
+                var refinedPoints = [CGPoint]()
+                for case let point in bottomLeftOuterPoint {
+                    print(point)
+                    if point.x == minX {
+                        refinedPoints.append(point)
+                    }
+                    if point.x == maxX {
+                        let x = point.x + scaleX
+                        refinedPoints.append(CGPoint(x: x, y: point.y))
+                    }
+                    if point.y == maxY {
+                        let y = point.y + scaleY
+                        refinedPoints.append(CGPoint(x: point.x, y: y))
+                    }
+                    if point.y == minY {
+                        refinedPoints.append(point)
+                    }
+                }
+                if !refinedPoints.isEmpty, let first = refinedPoints.first {
+                    let path = CGMutablePath()
+                    path.move(to: first)
+                    var i = 1
+                    print("Refined first point: \(first)")
+                    while i < refinedPoints.count {
+                        print(refinedPoints[i])
+                        path.addLine(to: refinedPoints[i])
+                        i += 1
+                    }
+                    UIColor.black.set()
+                    let rect = path.boundingBox
+                    context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
+                    context.stroke(rect)
+                }
+            }
+            if !topRightOuterPoint.isEmpty {
+                print(topRightOuterPoint)
+                let xArray = topRightOuterPoint.map(\.x)
+                let yArray = topRightOuterPoint.map(\.y)
+                guard let minX = xArray.min(),
+                      let maxX = xArray.max(),
+                      let minY = yArray.min(),
+                      let maxY = yArray.max() else { return context.makeImage() }
+                var refinedPoints = [CGPoint]()
+                for case let point in topRightOuterPoint {
+                    print(point)
+                    if point.x == minX {
+                        refinedPoints.append(point)
+                    }
+                    if point.x == maxX {
+                        let x = point.x + scaleX
+                        refinedPoints.append(CGPoint(x: x, y: point.y))
+                    }
+                    if point.y == maxY {
+                        let y = point.y + scaleY
+                        refinedPoints.append(CGPoint(x: point.x, y: y))
+                    }
+                    if point.y == minY {
+                        refinedPoints.append(point)
+                    }
+                }
+                if !refinedPoints.isEmpty, let first = refinedPoints.first {
+                    let path = CGMutablePath()
+                    path.move(to: first)
+                    var i = 1
+                    print("Refined first point: \(first)")
                     while i < refinedPoints.count {
                         print(refinedPoints[i])
                         path.addLine(to: refinedPoints[i])
@@ -1141,149 +1224,6 @@ public class EFQRCodeGenerator: NSObject {
             return isBottomLeftOuterPoint(x: x, y: y, size: codeSize) ? .bottomLeftOuter : .bottomLeftInner
         }
         return .unknown
-    }
-    
-    private func drawTopLeftOuterPoint(in context: CGContext, point: CGPoint,
-                                scaleX: CGFloat, scaleY: CGFloat, pointOffset: CGFloat) {
-        
-        if point.x == 19.0 {
-            let width: CGFloat = scaleX/2 - 2 * pointOffset
-            let height: CGFloat = scaleY - 2 * pointOffset
-            let rect = CGRect(origin: point, size: CGSize(width: width,
-                                                               height: height))
-            context.fill(rect)
-        }
-        
-        if point.x == 133.0 {
-            let width: CGFloat = scaleX/2 - 2 * pointOffset
-
-            let x = point.x + scaleX / 2
-            var rect = CGRect(x: x, y: point.y, width: width, height: scaleY - 2 * pointOffset)
-            rect = rotateRect(rect)
-            context.fill(rect)
-        }
-        
-        if point.y == 665 {
-            var width = scaleX - 2 * pointOffset
-            if point.x == 114 {
-                width += scaleX - 2 * pointOffset
-            }
-            let height = scaleY / 2 - 2 * pointOffset
-            let rect = CGRect(origin: point, size: CGSize(width: width,
-                                                               height: height))
-            context.fill(rect)
-        }
-        
-        if point.y == 779 {
-            var width = scaleX - 2 * pointOffset
-            if point.x == 114 || point.x == 19 {
-                width += scaleX - 2 * pointOffset
-            }
-            let y = point.y + scaleY / 2
-            let height = scaleY / 2 - 2 * pointOffset
-            let rect = CGRect(x: point.x, y: y, width: width, height: height)
-            
-            context.fill(rect)
-        }
-    }
-    
-    private func drawBottomLeftOuterPoint(in context: CGContext, point: CGPoint,
-                                          scaleX: CGFloat, scaleY: CGFloat, pointOffset: CGFloat) {
-        
-        if point.x == 19.0 {
-            let width: CGFloat = scaleX/2 - 2 * pointOffset
-            let height: CGFloat = scaleY - 2 * pointOffset
-            let rect = CGRect(origin: point, size: CGSize(width: width,
-                                                               height: height))
-            context.fill(rect)
-        }
-        
-        if point.x == 133.0 {
-            let width: CGFloat = scaleX/2 - 2 * pointOffset
-
-            let x = point.x + scaleX / 2
-            var rect = CGRect(x: x, y: point.y, width: width, height: scaleY - 2 * pointOffset)
-            rect = rotateRect(rect)
-            context.fill(rect)
-        }
-        
-        if point.y == 19 {
-            var width = scaleX - 2 * pointOffset
-            if point.x == 114 {
-                width += scaleX - 2 * pointOffset
-            }
-            let height = scaleY / 2 - 2 * pointOffset
-            let rect = CGRect(origin: point, size: CGSize(width: width,
-                                                               height: height))
-            context.fill(rect)
-        }
-        
-        if point.y == 133 {
-            var width = scaleX - 2 * pointOffset
-            if point.x == 114 || point.x == 19 {
-                width += scaleX - 2 * pointOffset
-            }
-            let y = point.y + scaleY / 2
-            let height = scaleY / 2 - 2 * pointOffset
-            let rect = CGRect(x: point.x, y: y, width: width, height: height)
-            
-            context.fill(rect)
-        }
-    }
-    
-    private func drawTopRightOuterPoint(in context: CGContext, point: CGPoint,
-                                        scaleX: CGFloat, scaleY: CGFloat, pointOffset: CGFloat) {
-        
-        if point.x == 665.0 {
-            let width: CGFloat = scaleX/2 - 2 * pointOffset
-            let height: CGFloat = scaleY - 2 * pointOffset
-            let rect = CGRect(origin: point, size: CGSize(width: width,
-                                                               height: height))
-            context.fill(rect)
-        }
-        
-        if point.x == 779.0 {
-            let width: CGFloat = scaleX/2 - 2 * pointOffset
-
-            let x = point.x + scaleX / 2
-            var rect = CGRect(x: x, y: point.y, width: width, height: scaleY - 2 * pointOffset)
-            rect = rotateRect(rect)
-            context.fill(rect)
-        }
-        
-        if point.y == 665 {
-            var width = scaleX - 2 * pointOffset
-            if point.x == 114 {
-                width += scaleX - 2 * pointOffset
-            }
-            let height = scaleY / 2 - 2 * pointOffset
-            let rect = CGRect(origin: point, size: CGSize(width: width,
-                                                               height: height))
-            context.fill(rect)
-            
-        }
-        
-        if point.y == 779 {
-            var width = scaleX - 2 * pointOffset
-            if point.x == 114 || point.x == 19 {
-                width += scaleX - 2 * pointOffset
-            }
-            let y = point.y + scaleY / 2
-            let height = scaleY / 2 - 2 * pointOffset
-            let rect = CGRect(x: point.x, y: y, width: width, height: height)
-            
-            context.fill(rect)
-            
-        }
-    }
-    
-    func rotateRect(_ rect: CGRect) -> CGRect {
-        let x = rect.midX
-        let y = rect.midY
-        let transform = CGAffineTransform(translationX: x, y: y)
-                                        .rotated(by: .pi)
-                                        .translatedBy(x: -x, y: -y)
-        return rect.applying(transform)
     }
     
     private func drawPoint(context: CGContext, rect: CGRect, isStatic: Bool = false, pointShape: EFPointShape) {

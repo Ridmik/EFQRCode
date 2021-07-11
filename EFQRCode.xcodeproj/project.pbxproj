@@ -98,6 +98,10 @@
 		5282BCBC1FF3903D00DFB36B /* EFQRCode+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12664EC41FA9CEDD00D56500 /* EFQRCode+GIF.swift */; };
 		5282BCBD1FF3903D00DFB36B /* EFQRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12664EC31FA9CEDD00D56500 /* EFQRCodeGenerator.swift */; };
 		8035DB621BAB492500466CB3 /* EFQRCode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8111E3319A95C8B0040E7D1 /* EFQRCode.framework */; };
+		921153F8269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921153F7269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift */; };
+		921153F9269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921153F7269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift */; };
+		921153FA269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921153F7269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift */; };
+		921153FB269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921153F7269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift */; };
 		D22654B6256E965300920D11 /* ObjCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D22654B5256E965300920D11 /* ObjCTests.m */; };
 		D22654B7256E965300920D11 /* ObjCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D22654B5256E965300920D11 /* ObjCTests.m */; };
 		D22654B8256E965300920D11 /* ObjCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D22654B5256E965300920D11 /* ObjCTests.m */; };
@@ -170,6 +174,7 @@
 		4DD67C0B1A5C55C900ED2280 /* EFQRCode.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EFQRCode.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5282BCAD1FF38F8100DFB36B /* EFQRCode.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EFQRCode.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72998D721BF26173006D3F69 /* Info-tvOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
+		921153F7269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EFQRCode+QRCodePosition.swift"; sourceTree = "<group>"; };
 		D22654B5256E965300920D11 /* ObjCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCTests.m; sourceTree = "<group>"; };
 		D2265503256E9BFF00920D11 /* EFQRCode+Migration-v6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EFQRCode+Migration-v6.swift"; sourceTree = "<group>"; };
 		D2265574256EA35600920D11 /* EFQRCode+ObjC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EFQRCode+ObjC.swift"; sourceTree = "<group>"; };
@@ -249,6 +254,7 @@
 				12664EC41FA9CEDD00D56500 /* EFQRCode+GIF.swift */,
 				12664EC31FA9CEDD00D56500 /* EFQRCodeGenerator.swift */,
 				12664EC21FA9CEDD00D56500 /* EFQRCodeRecognizer.swift */,
+				921153F7269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift */,
 				D2265503256E9BFF00920D11 /* EFQRCode+Migration-v6.swift */,
 				D2265574256EA35600920D11 /* EFQRCode+ObjC.swift */,
 			);
@@ -708,6 +714,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				921153FA269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */,
 				12EE9E55238696E700241C60 /* NSImage+.swift in Sources */,
 				12C0B6FA219C0FA5000545C9 /* EFPointShape.swift in Sources */,
 				12EE9E2E23859A4B00241C60 /* BinaryFloatingPoint+.swift in Sources */,
@@ -746,6 +753,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				921153F9269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */,
 				12EE9E54238696E700241C60 /* NSImage+.swift in Sources */,
 				12C0B6F9219C0FA5000545C9 /* EFPointShape.swift in Sources */,
 				12EE9E2D23859A4B00241C60 /* BinaryFloatingPoint+.swift in Sources */,
@@ -775,6 +783,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				921153FB269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */,
 				12EE9E56238696E700241C60 /* NSImage+.swift in Sources */,
 				12C0B6F6219C0F7D000545C9 /* EFQRCodeMode.swift in Sources */,
 				12EE9E2F23859A4B00241C60 /* BinaryFloatingPoint+.swift in Sources */,
@@ -804,6 +813,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				921153F8269ADC3B00D1E8D9 /* EFQRCode+QRCodePosition.swift in Sources */,
 				12EE9E53238696E700241C60 /* NSImage+.swift in Sources */,
 				12C0B6F8219C0FA5000545C9 /* EFPointShape.swift in Sources */,
 				12EE9E2C23859A4B00241C60 /* BinaryFloatingPoint+.swift in Sources */,

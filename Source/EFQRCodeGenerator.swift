@@ -614,6 +614,9 @@ public class EFQRCodeGenerator: NSObject {
         var result: CGImage?
         if let context = createContext(size: size) {
             // Point
+            var topLeftOuterPoint = [CGPoint]()
+            var bottomLeftOuterPoint = [CGPoint]()
+            var topRightOuterPoint = [CGPoint]()
             context.setFillColor(colorCGFront)
             for indexY in 0 ..< codeSize {
                 for indexX in 0 ..< codeSize where codes[indexX][indexY] {
@@ -633,7 +636,8 @@ public class EFQRCodeGenerator: NSObject {
                                     if position(x: indexX, y: indexY, codeSize: codeSize) == custom.position {
                                         context.setFillColor(custom.color.cgColor)
                                         if custom.position == .topLeftOuter {
-                                            drawTopLeftOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
+                                            topLeftOuterPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
+//                                            drawTopLeftOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
                                         } else if custom.position == .bottomLeftOuter {
                                             drawBottomLeftOuterPoint(in: context, point: CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset), scaleX: scaleX, scaleY: scaleY, pointOffset: pointOffset)
                                         } else if custom.position == .topRightOuter {
@@ -692,6 +696,52 @@ public class EFQRCodeGenerator: NSObject {
                             isStatic: isStaticPoint
                         )
                     }
+                }
+            }
+            if !topLeftOuterPoint.isEmpty {
+                print(topLeftOuterPoint)
+                let xArray = topLeftOuterPoint.map(\.x)
+                let yArray = topLeftOuterPoint.map(\.y)
+                guard let minX = xArray.min(),
+                      let maxX = xArray.max(),
+                      let minY = yArray.min(),
+                      let maxY = yArray.max() else { return context.makeImage() }
+                print(minX)
+                print(minY)
+                print(maxX)
+                print(maxY)
+                var refinedPoints = [CGPoint]()
+                for case let point in topLeftOuterPoint {
+                    print(point)
+                    if point.x == minX {
+                        refinedPoints.append(point)
+                    }
+                    if point.x == maxX {
+                        let x = point.x + scaleX
+                        refinedPoints.append(CGPoint(x: x, y: point.y))
+                    }
+                    if point.y == maxY {
+                        let y = point.y + scaleY
+                        refinedPoints.append(CGPoint(x: point.x, y: y))
+                    }
+                    if point.y == minY {
+                        refinedPoints.append(point)
+                    }
+                }
+                if !refinedPoints.isEmpty, let first = refinedPoints.first {
+                    let path = CGMutablePath()
+                    path.move(to: first)
+                    var i = 1
+                    print(first)
+                    while i < refinedPoints.count {
+                        print(refinedPoints[i])
+                        path.addLine(to: refinedPoints[i])
+                        i += 1
+                    }
+                    UIColor.black.set()
+                    let rect = path.boundingBox
+                    context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
+                    context.stroke(rect)
                 }
             }
             result = context.makeImage()
@@ -1350,5 +1400,26 @@ public class EFQRCodeGenerator: NSObject {
             }
         }
         return nil
+    }
+}
+
+public enum EFQRCodePosition {
+    case topLeftOuter
+    case topLeftInner
+    case topRightOuter
+    case topRightInner
+    case bottomLeftOuter
+    case bottomLeftInner
+    case unknown
+}
+
+public struct EFQRCustomization {
+    let color: UIColor
+    let position: EFQRCodePosition
+    let shape: EFPointShape = .square
+    
+    public init(color: UIColor, position: EFQRCodePosition) {
+        self.color = color
+        self.position = position
     }
 }

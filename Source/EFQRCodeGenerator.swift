@@ -699,7 +699,6 @@ public class EFQRCodeGenerator: NSObject {
             }
             if !topLeftOuterPoint.isEmpty,
                let color = customizations.first(where: {$0.position == .topLeftOuter})?.color {
-                print(topLeftOuterPoint)
                 let xArray = topLeftOuterPoint.map(\.x)
                 let yArray = topLeftOuterPoint.map(\.y)
                 guard let minX = xArray.min(),
@@ -728,7 +727,6 @@ public class EFQRCodeGenerator: NSObject {
                     path.move(to: first)
                     var i = 1
                     while i < refinedPoints.count {
-                        print(refinedPoints[i])
                         path.addLine(to: refinedPoints[i])
                         i += 1
                     }
@@ -768,7 +766,6 @@ public class EFQRCodeGenerator: NSObject {
                     path.move(to: first)
                     var i = 1
                     while i < refinedPoints.count {
-                        print(refinedPoints[i])
                         path.addLine(to: refinedPoints[i])
                         i += 1
                     }
@@ -788,7 +785,6 @@ public class EFQRCodeGenerator: NSObject {
                       let maxY = yArray.max() else { return context.makeImage() }
                 var refinedPoints = [CGPoint]()
                 for case let point in topRightOuterPoint {
-                    print(point)
                     if point.x == minX {
                         refinedPoints.append(point)
                     }
@@ -809,7 +805,6 @@ public class EFQRCodeGenerator: NSObject {
                     path.move(to: first)
                     var i = 1
                     while i < refinedPoints.count {
-                        print(refinedPoints[i])
                         path.addLine(to: refinedPoints[i])
                         i += 1
                     }

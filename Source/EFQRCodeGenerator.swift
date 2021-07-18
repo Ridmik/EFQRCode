@@ -652,6 +652,12 @@ public class EFQRCodeGenerator: NSObject {
                                             bottomLeftOuterPoint.append(CGPoint.init(x: centerPointX, y: centerPointY))
                                         } else if custom.position == .topRightOuter {
                                             topRightOuterPoint.append(CGPoint.init(x: centerPointX, y: centerPointY))
+                                        } else if custom.position == .topLeftInner {
+                                            topLeftInnerPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
+                                        } else if custom.position == .bottomLeftInner {
+                                            bottomLeftInnerPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
+                                        } else if custom.position == .topRightInner {
+                                            topRightInnerPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
                                         } else {
                                             context.fill(CGRect(
                                                 x: CGFloat(indexXCTM) * scaleX + pointOffset,
@@ -766,6 +772,135 @@ public class EFQRCodeGenerator: NSObject {
                     context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
                     context.setStrokeColor(color.cgColor)
                     context.strokePath()
+                }
+            }
+            if !topLeftInnerPoint.isEmpty,
+               let color = customizations.first(where: {$0.position == .topLeftInner})?.color {
+                let xArray = topLeftInnerPoint.map(\.x)
+                let yArray = topLeftInnerPoint.map(\.y)
+                guard let minX = xArray.min(),
+                      let maxX = xArray.max(),
+                      let minY = yArray.min(),
+                      let maxY = yArray.max() else { return context.makeImage() }
+                var refinedPoints = [CGPoint]()
+                for case let point in topLeftInnerPoint {
+                    if point.x == minX {
+                        refinedPoints.append(point)
+                    }
+                    if point.x == maxX {
+                        let x = point.x + scaleX
+                        refinedPoints.append(CGPoint(x: x, y: point.y))
+                    }
+                    if point.y == maxY {
+                        let y = point.y + scaleY
+                        refinedPoints.append(CGPoint(x: point.x, y: y))
+                    }
+                    if point.y == minY {
+                        refinedPoints.append(point)
+                    }
+                }
+                if !refinedPoints.isEmpty, let first = topLeftInnerPoint.first {
+                    let path = CGMutablePath()
+                    path.move(to: first)
+                    var i = 1
+                    while i < refinedPoints.count {
+                        path.addLine(to: refinedPoints[i])
+                        i += 1
+                    }
+                    let rect = path.boundingBox
+                    let beziPath = UIBezierPath(roundedRect: rect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 12, height: 12))
+
+                    context.addPath(beziPath.cgPath)
+                    context.closePath()
+                    context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
+                    context.setFillColor(color.cgColor)
+                    context.fillPath()
+                }
+            }
+            if !bottomLeftInnerPoint.isEmpty,
+               let color = customizations.first(where: {$0.position == .bottomLeftInner})?.color {
+                let xArray = bottomLeftInnerPoint.map(\.x)
+                let yArray = bottomLeftInnerPoint.map(\.y)
+                guard let minX = xArray.min(),
+                      let maxX = xArray.max(),
+                      let minY = yArray.min(),
+                      let maxY = yArray.max() else { return context.makeImage() }
+                var refinedPoints = [CGPoint]()
+                for case let point in bottomLeftInnerPoint {
+                    if point.x == minX {
+                        refinedPoints.append(point)
+                    }
+                    if point.x == maxX {
+                        let x = point.x + scaleX
+                        refinedPoints.append(CGPoint(x: x, y: point.y))
+                    }
+                    if point.y == maxY {
+                        let y = point.y + scaleY
+                        refinedPoints.append(CGPoint(x: point.x, y: y))
+                    }
+                    if point.y == minY {
+                        refinedPoints.append(point)
+                    }
+                }
+                if !refinedPoints.isEmpty, let first = bottomLeftInnerPoint.first {
+                    let path = CGMutablePath()
+                    path.move(to: first)
+                    var i = 1
+                    while i < refinedPoints.count {
+                        path.addLine(to: refinedPoints[i])
+                        i += 1
+                    }
+                    let rect = path.boundingBox
+                    let beziPath = UIBezierPath(roundedRect: rect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 12, height: 12))
+
+                    context.addPath(beziPath.cgPath)
+                    context.closePath()
+                    context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
+                    context.setFillColor(color.cgColor)
+                    context.fillPath()
+                }
+            }
+            if !topRightInnerPoint.isEmpty,
+               let color = customizations.first(where: {$0.position == .topRightInner})?.color {
+                let xArray = topRightInnerPoint.map(\.x)
+                let yArray = topRightInnerPoint.map(\.y)
+                guard let minX = xArray.min(),
+                      let maxX = xArray.max(),
+                      let minY = yArray.min(),
+                      let maxY = yArray.max() else { return context.makeImage() }
+                var refinedPoints = [CGPoint]()
+                for case let point in topRightInnerPoint {
+                    if point.x == minX {
+                        refinedPoints.append(point)
+                    }
+                    if point.x == maxX {
+                        let x = point.x + scaleX
+                        refinedPoints.append(CGPoint(x: x, y: point.y))
+                    }
+                    if point.y == maxY {
+                        let y = point.y + scaleY
+                        refinedPoints.append(CGPoint(x: point.x, y: y))
+                    }
+                    if point.y == minY {
+                        refinedPoints.append(point)
+                    }
+                }
+                if !refinedPoints.isEmpty, let first = topRightInnerPoint.first {
+                    let path = CGMutablePath()
+                    path.move(to: first)
+                    var i = 1
+                    while i < refinedPoints.count {
+                        path.addLine(to: refinedPoints[i])
+                        i += 1
+                    }
+                    let rect = path.boundingBox
+                    let beziPath = UIBezierPath(roundedRect: rect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 12, height: 12))
+
+                    context.addPath(beziPath.cgPath)
+                    context.closePath()
+                    context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
+                    context.setFillColor(color.cgColor)
+                    context.fillPath()
                 }
             }
             result = context.makeImage()

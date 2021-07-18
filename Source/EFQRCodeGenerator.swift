@@ -617,6 +617,9 @@ public class EFQRCodeGenerator: NSObject {
             var topLeftOuterPoint = [CGPoint]()
             var bottomLeftOuterPoint = [CGPoint]()
             var topRightOuterPoint = [CGPoint]()
+            var topLeftInnerPoint = [CGPoint]()
+            var bottomLeftInnerPoint = [CGPoint]()
+            var topRightInnerPoint = [CGPoint]()
             context.setFillColor(colorCGFront)
             for indexY in 0 ..< codeSize {
                 for indexX in 0 ..< codeSize where codes[indexX][indexY] {
@@ -635,12 +638,20 @@ public class EFQRCodeGenerator: NSObject {
                                 for case let custom in customizations {
                                     if position(x: indexX, y: indexY, codeSize: codeSize) == custom.position {
                                         context.setFillColor(custom.color.cgColor)
+                                        let rect = CGRect(
+                                            x: CGFloat(indexXCTM) * scaleX + pointOffset,
+                                            y: CGFloat(indexYCTM) * scaleY + pointOffset,
+                                            width: scaleX - 2 * pointOffset,
+                                            height: scaleY - 2 * pointOffset
+                                        )
+                                        let centerPointX = rect.minX + rect.width * 0.5
+                                        let centerPointY = rect.minY + rect.height * 0.5
                                         if custom.position == .topLeftOuter {
-                                            topLeftOuterPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
+                                            topLeftOuterPoint.append(CGPoint.init(x: centerPointX, y: centerPointY))
                                         } else if custom.position == .bottomLeftOuter {
-                                            bottomLeftOuterPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
+                                            bottomLeftOuterPoint.append(CGPoint.init(x: centerPointX, y: centerPointY))
                                         } else if custom.position == .topRightOuter {
-                                            topRightOuterPoint.append(CGPoint(x: CGFloat(indexXCTM) * scaleX + pointOffset, y: CGFloat(indexYCTM) * scaleY + pointOffset))
+                                            topRightOuterPoint.append(CGPoint.init(x: centerPointX, y: centerPointY))
                                         } else {
                                             context.fill(CGRect(
                                                 x: CGFloat(indexXCTM) * scaleX + pointOffset,
@@ -699,35 +710,12 @@ public class EFQRCodeGenerator: NSObject {
             }
             if !topLeftOuterPoint.isEmpty,
                let color = customizations.first(where: {$0.position == .topLeftOuter})?.color {
-                let xArray = topLeftOuterPoint.map(\.x)
-                let yArray = topLeftOuterPoint.map(\.y)
-                guard let minX = xArray.min(),
-                      let maxX = xArray.max(),
-                      let minY = yArray.min(),
-                      let maxY = yArray.max() else { return context.makeImage() }
-                var refinedPoints = [CGPoint]()
-                for case let point in topLeftOuterPoint {
-                    if point.x == minX {
-                        refinedPoints.append(point)
-                    }
-                    if point.x == maxX {
-                        let x = point.x + scaleX
-                        refinedPoints.append(CGPoint(x: x, y: point.y))
-                    }
-                    if point.y == maxY {
-                        let y = point.y + scaleY
-                        refinedPoints.append(CGPoint(x: point.x, y: y))
-                    }
-                    if point.y == minY {
-                        refinedPoints.append(point)
-                    }
-                }
-                if !refinedPoints.isEmpty, let first = refinedPoints.first {
+                if let first = topLeftOuterPoint.first {
                     let path = CGMutablePath()
                     path.move(to: first)
                     var i = 1
-                    while i < refinedPoints.count {
-                        path.addLine(to: refinedPoints[i])
+                    while i < topLeftOuterPoint.count {
+                        path.addLine(to: topLeftOuterPoint[i])
                         i += 1
                     }
                     color.set()
@@ -738,35 +726,12 @@ public class EFQRCodeGenerator: NSObject {
             }
             if !bottomLeftOuterPoint.isEmpty,
                let color = customizations.first(where: {$0.position == .bottomLeftOuter})?.color {
-                let xArray = bottomLeftOuterPoint.map(\.x)
-                let yArray = bottomLeftOuterPoint.map(\.y)
-                guard let minX = xArray.min(),
-                      let maxX = xArray.max(),
-                      let minY = yArray.min(),
-                      let maxY = yArray.max() else { return context.makeImage() }
-                var refinedPoints = [CGPoint]()
-                for case let point in bottomLeftOuterPoint {
-                    if point.x == minX {
-                        refinedPoints.append(point)
-                    }
-                    if point.x == maxX {
-                        let x = point.x + scaleX
-                        refinedPoints.append(CGPoint(x: x, y: point.y))
-                    }
-                    if point.y == maxY {
-                        let y = point.y + scaleY
-                        refinedPoints.append(CGPoint(x: point.x, y: y))
-                    }
-                    if point.y == minY {
-                        refinedPoints.append(point)
-                    }
-                }
-                if !refinedPoints.isEmpty, let first = refinedPoints.first {
+                if let first = bottomLeftOuterPoint.first {
                     let path = CGMutablePath()
                     path.move(to: first)
                     var i = 1
-                    while i < refinedPoints.count {
-                        path.addLine(to: refinedPoints[i])
+                    while i < bottomLeftOuterPoint.count {
+                        path.addLine(to: bottomLeftOuterPoint[i])
                         i += 1
                     }
                     color.set()
@@ -777,35 +742,12 @@ public class EFQRCodeGenerator: NSObject {
             }
             if !topRightOuterPoint.isEmpty,
                let color = customizations.first(where: {$0.position == .topRightOuter})?.color {
-                let xArray = topRightOuterPoint.map(\.x)
-                let yArray = topRightOuterPoint.map(\.y)
-                guard let minX = xArray.min(),
-                      let maxX = xArray.max(),
-                      let minY = yArray.min(),
-                      let maxY = yArray.max() else { return context.makeImage() }
-                var refinedPoints = [CGPoint]()
-                for case let point in topRightOuterPoint {
-                    if point.x == minX {
-                        refinedPoints.append(point)
-                    }
-                    if point.x == maxX {
-                        let x = point.x + scaleX
-                        refinedPoints.append(CGPoint(x: x, y: point.y))
-                    }
-                    if point.y == maxY {
-                        let y = point.y + scaleY
-                        refinedPoints.append(CGPoint(x: point.x, y: y))
-                    }
-                    if point.y == minY {
-                        refinedPoints.append(point)
-                    }
-                }
-                if !refinedPoints.isEmpty, let first = refinedPoints.first {
+                if let first = topRightOuterPoint.first {
                     let path = CGMutablePath()
                     path.move(to: first)
                     var i = 1
-                    while i < refinedPoints.count {
-                        path.addLine(to: refinedPoints[i])
+                    while i < topRightOuterPoint.count {
+                        path.addLine(to: topRightOuterPoint[i])
                         i += 1
                     }
                     color.set()

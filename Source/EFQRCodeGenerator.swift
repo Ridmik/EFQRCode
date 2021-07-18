@@ -718,10 +718,14 @@ public class EFQRCodeGenerator: NSObject {
                         path.addLine(to: topLeftOuterPoint[i])
                         i += 1
                     }
-                    color.set()
                     let rect = path.boundingBox
+                    let beziPath = UIBezierPath(roundedRect: rect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 12, height: 12))
+
+                    context.addPath(beziPath.cgPath)
+                    context.closePath()
                     context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
-                    context.stroke(rect)
+                    context.setStrokeColor(color.cgColor)
+                    context.strokePath()
                 }
             }
             if !bottomLeftOuterPoint.isEmpty,
@@ -734,10 +738,14 @@ public class EFQRCodeGenerator: NSObject {
                         path.addLine(to: bottomLeftOuterPoint[i])
                         i += 1
                     }
-                    color.set()
                     let rect = path.boundingBox
+                    let beziPath = UIBezierPath(roundedRect: rect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 12, height: 12))
+
+                    context.addPath(beziPath.cgPath)
+                    context.closePath()
                     context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
-                    context.stroke(rect)
+                    context.setStrokeColor(color.cgColor)
+                    context.strokePath()
                 }
             }
             if !topRightOuterPoint.isEmpty,
@@ -750,10 +758,14 @@ public class EFQRCodeGenerator: NSObject {
                         path.addLine(to: topRightOuterPoint[i])
                         i += 1
                     }
-                    color.set()
                     let rect = path.boundingBox
+                    let beziPath = UIBezierPath(roundedRect: rect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 12, height: 12))
+
+                    context.addPath(beziPath.cgPath)
+                    context.closePath()
                     context.setLineWidth((scaleX - 2 * pointOffset) * 0.7)
-                    context.stroke(rect)
+                    context.setStrokeColor(color.cgColor)
+                    context.strokePath()
                 }
             }
             result = context.makeImage()
